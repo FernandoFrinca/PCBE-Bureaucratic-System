@@ -10,13 +10,38 @@ public class Birou {
         this.ghiseuri = ghiseuri;
     }
 
-    public void adaugaClient(Client client){
-        Iterator<Ghiseu> it = ghiseuri.iterator();
-        while(it.hasNext()){
-            Ghiseu ghiseu = it.next();
-            if(ghiseu.getStare() == true){
-                ghiseu.adaugaClient(client);
+    public  void adaugaClient(Client client){
+
+        for (Document doc : client.getDocumente()) {
+            String idDoc = doc.getId();
+            switch (idDoc){
+                case "Pasaport", "Buletin":{
+                    for (Ghiseu ghiseu : ghiseuri) {
+                        if (ghiseu.getStare() && ghiseu.getDocumentAtribuit().getId().equals(idDoc)) {
+                            ghiseu.adaugaClient(client);
+                            try {
+                                ghiseu.eliminaClient(client);
+
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            break;
+                        }
+                    }
+                }break;
+                default:break;
             }
         }
     }
+
 }
+/*
+public void adaugaClient(Client client){
+    Iterator<Ghiseu> it = ghiseuri.iterator();
+    while(it.hasNext()){
+        Ghiseu ghiseu = it.next();
+        if(ghiseu.getStare() == true){
+            ghiseu.adaugaClient(client);
+        }
+    }
+}*/
