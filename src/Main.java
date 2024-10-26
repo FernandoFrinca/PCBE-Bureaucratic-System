@@ -4,19 +4,16 @@ import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {
-        final int NUMBER_OF_THREADS = 5;
+        final int NUMBER_OF_THREADS = 70;
         final int NUMBER_OF_OFFICES = 3;
 
-        // Creăm lista de birouri
         ArrayList<Birou> listaDeBirouri = new ArrayList<>();
         listaDeBirouri.add(new Birou("Birou 1"));
         listaDeBirouri.add(new Birou("Birou 2"));
         listaDeBirouri.add(new Birou("Birou 3"));
 
-        // Executor Service pentru thread-uri
         ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-        // Creăm și rulăm clienți
         for (int i = 1; i <= NUMBER_OF_THREADS; i++) {
             Client client = new Client("Client " + i, "Document " + i, listaDeBirouri, i);
             executorService.submit(() -> {
@@ -28,20 +25,17 @@ public class Main {
             });
         }
 
-        // Închidem executorul după terminarea task-urilor
         executorService.shutdown();
 
         try {
-            // Așteaptă finalizarea task-urilor în executor
             if (!executorService.awaitTermination(60, java.util.concurrent.TimeUnit.SECONDS)) {
-                executorService.shutdownNow(); // Forțează oprirea dacă nu s-a terminat
+                executorService.shutdownNow();
             }
         } catch (InterruptedException e) {
             executorService.shutdownNow();
             Thread.currentThread().interrupt();
         }
 
-        // Afișează informațiile finale despre birouri
         for (Birou birou : listaDeBirouri) {
             System.out.println("Număr de clienți serviți de " + birou + ": " + birou.getClientCount());
         }
