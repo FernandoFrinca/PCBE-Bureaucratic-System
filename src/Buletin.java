@@ -1,6 +1,4 @@
-public class Buletin extends Document{
+public class Buletin{
 
-    public Buletin(){
-        super("Buletin");
-    }
+
 }

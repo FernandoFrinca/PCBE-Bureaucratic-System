@@ -1,41 +1,52 @@
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
-public class Client implements Runnable{
-    private ArrayList<Document> documenteDetinute;
-    private ArrayList<Document> documenteNecesare;
+public class Client implements Runnable {
     private String nume;
+    private String document_necesar;
+    private ArrayList<Birou> lista_de_birouri;
+    private final int threadNumber;
+    private Semaphore semafor;
 
-    public Client(String nume, ArrayList<Document> documenteDetinute, ArrayList<Document> documenteNecesare) {
+    Client(String nume, String document_necesar, ArrayList<Birou> lista_de_birouri, int threadNumber) {
         this.nume = nume;
-        this.documenteDetinute = documenteDetinute;
-        this.documenteNecesare = documenteNecesare;
+        this.document_necesar = document_necesar;
+        this.lista_de_birouri = lista_de_birouri;
+        this.threadNumber = threadNumber;
+        this.semafor = new Semaphore(1);  // Limitează accesul simultan
     }
 
-//    public boolean hasNecessaryDocument() {
-//        return documenteDetinute.contains(documentNecesar);
-//    }
+    public void cautaBirou() throws InterruptedException {
+        boolean clientAsignat = false;
+        semafor.acquire();
+        try {
+            for (Birou birou : lista_de_birouri) {
+                if (birou.allowClient(this)) {
+                    clientAsignat = true;
+                    break; // Stop searching once assigned
+                }
+            }
+        } finally {
+            semafor.release();
+        }
 
-    public ArrayList<Document> getDocumente(){
-        return documenteNecesare;
-    }
-
-    //aici primeste documentele necesare
-    public void getDocumenteNecesare(Document doc) {
-            System.out.println("I need " + doc + " " + this.nume + " si l-am obtinut");
-            documenteDetinute.add(doc);
-    }
-
-
-    public String toString(){
-        return nume;
+        if (!clientAsignat) {
+            System.out.println("Client " + nume + " nu a găsit un birou disponibil.");
+        }
     }
 
     @Override
     public void run() {
-
+        try {
+            cautaBirou();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.err.println("Task " + threadNumber + " was interrupted.");
+        }
     }
 
-    public String getNume() {
+    @Override
+    public String toString() {
         return nume;
     }
 }

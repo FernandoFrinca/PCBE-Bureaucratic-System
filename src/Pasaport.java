@@ -1,6 +1,4 @@
-public class Pasaport extends Document{
+public class Pasaport {
 
-    public Pasaport(){
-        super("Pasaport");
-    }
+
 }

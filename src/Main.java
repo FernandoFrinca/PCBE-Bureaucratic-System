@@ -1,77 +1,49 @@
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
-
     public static void main(String[] args) {
-        Document buletin = new Buletin();
-        Document pasaport = new Pasaport();
+        final int NUMBER_OF_THREADS = 5;
+        final int NUMBER_OF_OFFICES = 3;
 
-        Ghiseu ghiseu1 = new Ghiseu(1,buletin);
-        Ghiseu ghiseu2 = new Ghiseu(2,buletin);
-        Ghiseu ghiseu3 = new Ghiseu(3,buletin);
-        Ghiseu ghiseu4 = new Ghiseu(4,pasaport);
-        Ghiseu ghiseu5 = new Ghiseu(5,pasaport);
+        // Creăm lista de birouri
+        ArrayList<Birou> listaDeBirouri = new ArrayList<>();
+        listaDeBirouri.add(new Birou("Birou 1"));
+        listaDeBirouri.add(new Birou("Birou 2"));
+        listaDeBirouri.add(new Birou("Birou 3"));
 
-        ArrayList<Ghiseu> ghiseuri = new ArrayList<Ghiseu>();
-        ghiseu1.deschideGhiseu();
-        ghiseu2.deschideGhiseu();
-        ghiseu3.deschideGhiseu();
-        ghiseu4.deschideGhiseu();
-        ghiseu5.deschideGhiseu();
-        ghiseuri.add(ghiseu1);
-        ghiseuri.add(ghiseu2);
-        ghiseuri.add(ghiseu3);
-        ghiseuri.add(ghiseu4);
-        ghiseuri.add(ghiseu5);
+        // Executor Service pentru thread-uri
+        ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-        Birou birou1 = new Birou(ghiseuri);
+        // Creăm și rulăm clienți
+        for (int i = 1; i <= NUMBER_OF_THREADS; i++) {
+            Client client = new Client("Client " + i, "Document " + i, listaDeBirouri, i);
+            executorService.submit(() -> {
+                try {
+                    client.cautaBirou();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+        }
 
-        ArrayList<Document> documenteDetinuteClient1 = new ArrayList<Document>();
+        // Închidem executorul după terminarea task-urilor
+        executorService.shutdown();
 
-        ArrayList<Document> documenteNecesareClient1 = new ArrayList<Document>();
-        documenteNecesareClient1.add(buletin);
-        documenteNecesareClient1.add(pasaport);
-        ArrayList<Document> documenteNecesareClient2 = new ArrayList<Document>();
-        documenteNecesareClient2.add(pasaport);
-        documenteNecesareClient2.add(buletin);
-        ArrayList<Document> documenteNecesareClient3 = new ArrayList<Document>();
-        documenteNecesareClient3.add(pasaport);
-        
-        Client client1 = new Client("Fernando", documenteDetinuteClient1, documenteNecesareClient1);
-        Client client2 = new Client("Maria", documenteDetinuteClient1, documenteNecesareClient2);
-        Client client3 = new Client("Jose", documenteDetinuteClient1, documenteNecesareClient3);
+        try {
+            // Așteaptă finalizarea task-urilor în executor
+            if (!executorService.awaitTermination(60, java.util.concurrent.TimeUnit.SECONDS)) {
+                executorService.shutdownNow(); // Forțează oprirea dacă nu s-a terminat
+            }
+        } catch (InterruptedException e) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
 
-        Thread thread1 = new Thread(new ClientRunnable(birou1, client1));
-        Thread thread2 = new Thread(new ClientRunnable(birou1, client2));
-        Thread thread3 = new Thread(new ClientRunnable(birou1, client3));
-
-        thread1.start();
-        thread2.start();
-        thread3.start();
+        // Afișează informațiile finale despre birouri
+        for (Birou birou : listaDeBirouri) {
+            System.out.println("Număr de clienți serviți de " + birou + ": " + birou.getClientCount());
+        }
     }
 }
-
-
-
-/*
-        Document buletin1 = new Buletin();
-        Document pasaport1 = new Pasaport();
-        Ghiseu ghiseu1 = new Ghiseu(buletin1);
-        Ghiseu ghiseu2 = new Ghiseu(pasaport1);
-
-        ArrayList<Ghiseu> ghiseuri = new ArrayList<Ghiseu>();
-
-        ghiseu1.deschideGhiseu();
-
-        ghiseuri.add(ghiseu1);
-        ghiseuri.add(ghiseu2);
-
-        Birou birou1 = new Birou(ghiseuri);
-
-        ArrayList<Document> documenteDetinuteClient1 = new ArrayList<Document>();
-        documenteDetinuteClient1.add(buletin1);
-
-        Client client1 = new Client("Fernando", documenteDetinuteClient1, pasaport1);
-        birou1.adaugaClient(client1);
-        ghiseu1.eliminaClient(client1);
- */
