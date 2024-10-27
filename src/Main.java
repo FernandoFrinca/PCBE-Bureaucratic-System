@@ -16,13 +16,7 @@ public class Main {
 
         for (int i = 1; i <= NUMBER_OF_THREADS; i++) {
             Client client = new Client("Client " + i, "Document " + i, listaDeBirouri, i);
-            executorService.submit(() -> {
-                try {
-                    client.cautaBirou();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            });
+            executorService.submit(client);
         }
 
         executorService.shutdown();
