@@ -12,9 +12,14 @@ public class Main {
         //pasaport -> buletin, adeverinta
         //buletin -> adeverinta
         //adeverinta -> NIMIC
-        Ghiseu ghiseuBuletin = new Ghiseu(new Buletin());
-        Ghiseu ghiseuPasaport = new Ghiseu(new Pasaport());
-        Ghiseu ghiseuAdeverinta = new Ghiseu(new Adeverinta());
+
+        Document buletin = new Buletin();
+        Document pasaport = new Pasaport();
+        Document adeverinta = new Adeverinta();
+
+        Ghiseu ghiseuBuletin = new Ghiseu(buletin);
+        Ghiseu ghiseuPasaport = new Ghiseu(pasaport);
+        Ghiseu ghiseuAdeverinta = new Ghiseu(adeverinta);
 
         ArrayList<Ghiseu> listaGhiseuriBirou1 = new ArrayList<>();
         listaGhiseuriBirou1.add(ghiseuBuletin);
@@ -39,15 +44,15 @@ public class Main {
                 );
 
         for (int i = 1; i <= NUMBER_OF_THREADS_BULETIN; i++) {
-            Client client = new Client("Client " + i, "Buletin", listaDeBirouri, i);
+            Client client = new Client("Client " + i, buletin, listaDeBirouri, i);
             executorService.submit(client);
         }
         for (int i = 1; i <= NUMBER_OF_THREADS_PASAPORT; i++) {
-            Client client = new Client("Client " + (i+100), "Pasaport", listaDeBirouri, i);
+            Client client = new Client("Client " + (i+100), pasaport, listaDeBirouri, i);
             executorService.submit(client);
         }
         for (int i = 1; i <= NUMBER_OF_THREADS_ADEVERINTA; i++) {
-            Client client = new Client("Client " + (i+200), "Adeverinta", listaDeBirouri, i);
+            Client client = new Client("Client " + (i+200), adeverinta, listaDeBirouri, i);
             executorService.submit(client);
         }
         executorService.shutdown();

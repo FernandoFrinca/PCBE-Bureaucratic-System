@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public class Client implements Runnable {
     private String nume;
-    private String document_necesar;
+    private Document document_necesar;
     private ArrayList<Birou> lista_de_birouri;
     private final int threadNumber;
     private Birou birou_asignat;
 
-    Client(String nume, String document_necesar, ArrayList<Birou> lista_de_birouri, int threadNumber) {
+    Client(String nume, Document document_necesar, ArrayList<Birou> lista_de_birouri, int threadNumber) {
         this.nume = nume;
         this.document_necesar = document_necesar;
         this.lista_de_birouri = lista_de_birouri;
@@ -21,14 +21,13 @@ public class Client implements Runnable {
             while (!clientAsignat) {
                 for (Birou birou : lista_de_birouri) {
                     synchronized (birou) {
-                        if (birou.allowClient(this)) {
-                            birou_asignat = birou;
-                            if(birou.obtinereDocumentDeLaGhiseu(this)) {
+                        if(birou.obtinereDocumentDeLaGhiseu(this)) {
+                            if (birou.allowClient(this) ) {
+                                birou_asignat = birou;
                                 clientAsignat = true;
+                                break;
                             }
-                            break;
                         }
-
                     }
                 }
 
@@ -66,6 +65,6 @@ public class Client implements Runnable {
     }
 
     public String getDocument_necesar() {
-        return document_necesar;
+        return document_necesar.getTip();
     }
 }

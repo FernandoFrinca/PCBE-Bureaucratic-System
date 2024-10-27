@@ -34,7 +34,7 @@ public class Birou {
 
     public boolean obtinereDocumentDeLaGhiseu(Client client) {
         for (Ghiseu ghiseu : lista_ghiseuri_din_birou) {
-            if(ghiseu.getTip_de_document_eliberat() == client.getDocument_necesar())
+            if(ghiseu.getTip_de_document_eliberat().equals(client.getDocument_necesar()))
                 return true;
         }
 
