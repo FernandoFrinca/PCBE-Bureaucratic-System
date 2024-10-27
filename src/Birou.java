@@ -1,36 +1,31 @@
-import java.util.concurrent.Semaphore;
-
 public class Birou {
     private String nume;
-    private Semaphore semafor;
     private int clientCount = 0;
-    private final int MAX_CLIENTS = 2;  // Capacitate maximă de clienți într-un birou
+    private final int MAX_CLIENTS = 2;
 
     public Birou(String nume) {
         this.nume = nume;
-        this.semafor = new Semaphore(1);
     }
 
-    public synchronized boolean allowClient(Client client) throws InterruptedException {
-        while (clientCount >= MAX_CLIENTS) {
-            wait(); // Intrăm în așteptare dacă biroul este plin
+    public synchronized boolean allowClient(Client client) {
+        if (clientCount >= MAX_CLIENTS) {
+            return false;  // Biroul este plin
         }
 
-        semafor.acquire();
-        try {
-            clientCount++;
-            client.setBirou_asignat(this);
-            System.out.println("Client " + client + " a fost asignat la biroul " + nume);
-        } finally {
-            semafor.release();
-        }
+        clientCount++;
+        client.setBirou_asignat(this);
+        System.out.println("Client " + client + " a fosts aignat la biroul " + nume);
         return true;
     }
 
-    public synchronized void leaveOffice() {
+    public synchronized void leaveOffice(Client client) {
         clientCount--;
-        System.out.println("Un client a eliberat un loc la biroul " + nume);
+        System.out.println(client + " a eliberat un loc la biroul " + nume);
         notifyAll(); // Notificăm toți clienții aflați în așteptare
+    }
+
+    public synchronized boolean isFull() {
+        return clientCount >= MAX_CLIENTS;
     }
 
     public int getClientCount() {

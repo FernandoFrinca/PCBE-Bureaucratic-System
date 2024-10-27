@@ -4,7 +4,7 @@ import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {
-        final int NUMBER_OF_THREADS = 70;
+        final int NUMBER_OF_THREADS = 10;
         final int NUMBER_OF_OFFICES = 3;
 
         ArrayList<Birou> listaDeBirouri = new ArrayList<>();

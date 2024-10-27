@@ -14,20 +14,26 @@ public class Client implements Runnable {
         this.threadNumber = threadNumber;
     }
 
-    public synchronized void cautaBirou() throws InterruptedException {
-        boolean clientAsignat = false;
+    public void cautaBirou() throws InterruptedException {
+        synchronized (lista_de_birouri) {
+            boolean clientAsignat = false;
 
-        while (!clientAsignat) {
-            for (Birou birou : lista_de_birouri) {
-                if (birou.allowClient(this)) {
-                    clientAsignat = true;
-                    break;
+            while (!clientAsignat) {
+                for (Birou birou : lista_de_birouri) {
+                    synchronized (birou) {
+                        if (birou.allowClient(this)) {
+                            birou_asignat = birou;
+                            clientAsignat = true;
+                            break;
+                        }
+                    }
                 }
-            }
 
-            if (!clientAsignat) {
-                System.out.println("Client " + nume + " așteaptă să se elibereze un loc.");
-                wait(); // Intrăm în așteptare dacă niciun birou nu este disponibil
+                // Așteptăm doar dacă toate birourile sunt pline
+                if (!clientAsignat) {
+                    System.out.println("Client " + nume + " așteaptă să se elibereze un loc.");
+                    lista_de_birouri.wait();
+                }
             }
         }
     }
@@ -37,7 +43,7 @@ public class Client implements Runnable {
     }
 
     public void print_birou_asignat() {
-        System.out.println("Clientul " + nume + " este asignat la biroul " + birou_asignat);
+        //System.out.println("Clientul " + nume + " este asignat la biroul " + birou_asignat);
     }
 
     @Override
@@ -46,7 +52,13 @@ public class Client implements Runnable {
             cautaBirou();
             print_birou_asignat();
             Thread.sleep(1000); // Clientul petrece un timp la birou
-            birou_asignat.leaveOffice(); // Clientul părăsește biroul
+            synchronized (birou_asignat) {
+                birou_asignat.leaveOffice(this); // Clientul părăsește biroul
+            }
+
+            synchronized (lista_de_birouri) {
+                lista_de_birouri.notifyAll(); // Notificăm toți clienții în așteptare
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             System.err.println("Task " + threadNumber + " was interrupted.");
