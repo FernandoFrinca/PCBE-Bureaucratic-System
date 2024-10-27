@@ -23,9 +23,12 @@ public class Client implements Runnable {
                     synchronized (birou) {
                         if (birou.allowClient(this)) {
                             birou_asignat = birou;
-                            clientAsignat = true;
+                            if(birou.obtinereDocumentDeLaGhiseu(this)) {
+                                clientAsignat = true;
+                            }
                             break;
                         }
+
                     }
                 }
 
@@ -60,5 +63,9 @@ public class Client implements Runnable {
             Thread.currentThread().interrupt();
             System.err.println("Task " + threadNumber + " was interrupted.");
         }
+    }
+
+    public String getDocument_necesar() {
+        return document_necesar;
     }
 }

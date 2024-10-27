@@ -1,10 +1,14 @@
+import java.util.ArrayList;
+
 public class Birou {
     private String nume;
     private int clientCount = 0;
     private final int MAX_CLIENTS = 2;
+    private ArrayList<Ghiseu> lista_ghiseuri_din_birou;
 
-    public Birou(String nume) {
+    public Birou(String nume, ArrayList<Ghiseu> lista_ghiseuri_din_birou) {
         this.nume = nume;
+        this.lista_ghiseuri_din_birou = lista_ghiseuri_din_birou;
     }
 
     public boolean allowClient(Client client) {
@@ -22,6 +26,19 @@ public class Birou {
         clientCount--;
         System.out.println(client + " a eliberat un loc la biroul " + nume);
         notifyAll(); // Notificăm toți clienții aflați în așteptare
+    }
+
+    public ArrayList<Ghiseu> getLista_ghiseuri_din_birou() {
+        return lista_ghiseuri_din_birou;
+    }
+
+    public boolean obtinereDocumentDeLaGhiseu(Client client) {
+        for (Ghiseu ghiseu : lista_ghiseuri_din_birou) {
+            if(ghiseu.getTip_de_document_eliberat() == client.getDocument_necesar())
+                return true;
+        }
+
+        return false;
     }
 
     @Override
