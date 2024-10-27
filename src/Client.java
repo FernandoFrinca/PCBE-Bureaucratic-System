@@ -35,38 +35,30 @@ public class Client implements Runnable {
                     lista_de_birouri.wait();
                 }
             }
-        }
+       }
     }
 
     public void setBirou_asignat(Birou birou_asignat) {
         this.birou_asignat = birou_asignat;
     }
 
-    public void print_birou_asignat() {
-        //System.out.println("Clientul " + nume + " este asignat la biroul " + birou_asignat);
+    @Override
+    public String toString() {
+        return nume;
     }
 
     @Override
     public void run() {
         try {
             cautaBirou();
-            print_birou_asignat();
-            Thread.sleep(1000); // Clientul petrece un timp la birou
-            synchronized (birou_asignat) {
-                birou_asignat.leaveOffice(this); // Clientul părăsește biroul
-            }
-
+            Thread.sleep(1000);
+            birou_asignat.leaveOffice(this);
             synchronized (lista_de_birouri) {
-                lista_de_birouri.notifyAll(); // Notificăm toți clienții în așteptare
+                lista_de_birouri.notifyAll();
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             System.err.println("Task " + threadNumber + " was interrupted.");
         }
-    }
-
-    @Override
-    public String toString() {
-        return nume;
     }
 }

@@ -4,7 +4,7 @@ import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {
-        final int NUMBER_OF_THREADS = 10;
+        final int NUMBER_OF_THREADS = 20;
         final int NUMBER_OF_OFFICES = 3;
 
         ArrayList<Birou> listaDeBirouri = new ArrayList<>();
@@ -18,7 +18,6 @@ public class Main {
             Client client = new Client("Client " + i, "Document " + i, listaDeBirouri, i);
             executorService.submit(client);
         }
-
         executorService.shutdown();
 
         try {
@@ -30,8 +29,5 @@ public class Main {
             Thread.currentThread().interrupt();
         }
 
-        for (Birou birou : listaDeBirouri) {
-            System.out.println("Număr de clienți serviți de " + birou + ": " + birou.getClientCount());
-        }
     }
 }

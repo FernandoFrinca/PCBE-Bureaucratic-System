@@ -7,14 +7,14 @@ public class Birou {
         this.nume = nume;
     }
 
-    public synchronized boolean allowClient(Client client) {
+    public boolean allowClient(Client client) {
         if (clientCount >= MAX_CLIENTS) {
-            return false;  // Biroul este plin
+            return false;
         }
 
         clientCount++;
         client.setBirou_asignat(this);
-        System.out.println("Client " + client + " a fosts aignat la biroul " + nume);
+        System.out.println("Client " + client + " a fost asignat la biroul " + nume);
         return true;
     }
 
@@ -22,14 +22,6 @@ public class Birou {
         clientCount--;
         System.out.println(client + " a eliberat un loc la biroul " + nume);
         notifyAll(); // Notificăm toți clienții aflați în așteptare
-    }
-
-    public synchronized boolean isFull() {
-        return clientCount >= MAX_CLIENTS;
-    }
-
-    public int getClientCount() {
-        return clientCount;
     }
 
     @Override
