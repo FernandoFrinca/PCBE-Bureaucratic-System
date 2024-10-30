@@ -13,4 +13,9 @@ public class Ghiseu {
     public String getTip_de_document_eliberat() {
         return tip_de_document_eliberat.getTip();
     }
+
+    @Override
+    public String toString() {
+        return "Ghiseu " + tip_de_document_eliberat + " ";
+    }
 }

@@ -5,8 +5,7 @@ public class Pasaport extends Document {
 
 
     public Pasaport() {
-        super("Pasaport",
-                new ArrayList<>(Arrays.asList(new Buletin(), new Adeverinta())));
+        super("Pasaport");
 
     }
 }

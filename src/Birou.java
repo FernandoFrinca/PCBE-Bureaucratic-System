@@ -11,21 +11,22 @@ public class Birou {
         this.lista_ghiseuri_din_birou = lista_ghiseuri_din_birou;
     }
 
-    public boolean allowClient(Client client) {
+    public synchronized boolean allowClient(Client client) {
         if (clientCount >= MAX_CLIENTS) {
             return false;
         }
 
         clientCount++;
         client.setBirou_asignat(this);
-        System.out.println("Client " + client + " a fost asignat la biroul " + nume);
+        System.out.println("------------------------------------------------");
+        System.out.println("-> Client " + client + " a fost asignat la biroul " + nume);
         return true;
     }
 
     public synchronized void leaveOffice(Client client) {
         clientCount--;
-        System.out.println(client + " a eliberat un loc la biroul " + nume);
-        notifyAll(); // Notificăm toți clienții aflați în așteptare
+        System.out.println("<- " + client + " a eliberat un loc la biroul " + nume);
+        notifyAll();
     }
 
     public ArrayList<Ghiseu> getLista_ghiseuri_din_birou() {
@@ -33,12 +34,31 @@ public class Birou {
     }
 
     public boolean obtinereDocumentDeLaGhiseu(Client client) {
+        ArrayList<String> documente = client.getDocumenteNecesare();
+
+        boolean toateDocumenteleObtinute = true;
+
         for (Ghiseu ghiseu : lista_ghiseuri_din_birou) {
-            if(ghiseu.getTip_de_document_eliberat().equals(client.getDocument_necesar()))
-                return true;
+            String tipDocument = ghiseu.getTip_de_document_eliberat();
+
+            System.out.println("=  Clientul " + client + " a intrat in ghiseul pentru " + tipDocument);
+
+            if (documente.contains(tipDocument)) {
+                documente.remove(tipDocument);
+                client.setDocumenteNecesare(documente);
+                System.out.println("-  A fost scos documentul: " + tipDocument);
+                System.out.println("+  Documente ramase: " + documente);
+            }
+
+            if (!documente.isEmpty()) {
+                toateDocumenteleObtinute = false;
+            }
         }
 
-        return false;
+        if (!toateDocumenteleObtinute) {
+            leaveOffice(client);
+        }
+        return toateDocumenteleObtinute;
     }
 
     @Override
