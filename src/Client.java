@@ -6,6 +6,8 @@ public class Client implements Runnable {
     private ArrayList<Birou> lista_de_birouri;
     private final int threadNumber;
     private Birou birou_asignat;
+    ArrayList<String> documenteNecesare = new ArrayList<String>();
+    private boolean obtinereListaDocumente = false;
 
     Client(String nume, Document document_necesar, ArrayList<Birou> lista_de_birouri, int threadNumber) {
         this.nume = nume;
@@ -21,27 +23,60 @@ public class Client implements Runnable {
             while (!clientAsignat) {
                 for (Birou birou : lista_de_birouri) {
                     synchronized (birou) {
-                        if(birou.obtinereDocumentDeLaGhiseu(this)) {
-                            if (birou.allowClient(this) ) {
+                        if (birou.allowClient(this)) {
+                            if (birou.obtinereDocumentDeLaGhiseu(this)) {
                                 birou_asignat = birou;
                                 clientAsignat = true;
                                 break;
                             }
                         }
                     }
+
+                    if (documenteObtained()) {
+                        clientAsignat = true;
+                        break;
+                    }
                 }
 
-                // Așteptăm doar dacă toate birourile sunt pline
                 if (!clientAsignat) {
                     System.out.println("Client " + nume + " așteaptă să se elibereze un loc.");
                     lista_de_birouri.wait();
                 }
             }
-       }
+        }
+    }
+
+    private boolean documenteObtained() {
+        return getDocumenteNecesare().isEmpty();
     }
 
     public void setBirou_asignat(Birou birou_asignat) {
         this.birou_asignat = birou_asignat;
+    }
+
+    public ArrayList<String> getDocumenteNecesare() {
+        if (!obtinereListaDocumente) {
+            String documentNecesar = document_necesar.getTip();
+
+            switch (documentNecesar) {
+                case "Adeverinta":
+                    documenteNecesare.add("Adeverinta");
+                    break;
+                case "Buletin":
+                    documenteNecesare.add("Adeverinta");
+                    documenteNecesare.add("Buletin");
+                    break;
+                case "Pasaport":
+                    documenteNecesare.add("Adeverinta");
+                    documenteNecesare.add("Buletin");
+                    documenteNecesare.add("Pasaport");
+                    break;
+                default:
+                    break;
+            }
+            obtinereListaDocumente = true;
+        }
+        return documenteNecesare;
     }
 
     @Override
@@ -66,5 +101,9 @@ public class Client implements Runnable {
 
     public String getDocument_necesar() {
         return document_necesar.getTip();
+    }
+
+    public void setDocumenteNecesare(ArrayList<String> documenteNecesare) {
+        this.documenteNecesare = documenteNecesare;
     }
 }

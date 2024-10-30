@@ -23,7 +23,6 @@ public class Main {
 
         ArrayList<Ghiseu> listaGhiseuriBirou1 = new ArrayList<>();
         listaGhiseuriBirou1.add(ghiseuBuletin);
-        listaGhiseuriBirou1.add(ghiseuPasaport);
         listaGhiseuriBirou1.add(ghiseuAdeverinta);
 
         ArrayList<Ghiseu> listaGhiseuriBirou2 = new ArrayList<>();
