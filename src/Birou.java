@@ -4,6 +4,7 @@ public class Birou {
     private String nume;
     private int clientCount = 0;
     private final int MAX_CLIENTS = 2;
+    private int contorListaGhiseuri = 0;
     private ArrayList<Ghiseu> lista_ghiseuri_din_birou;
 
     public Birou(String nume, ArrayList<Ghiseu> lista_ghiseuri_din_birou) {
@@ -41,6 +42,14 @@ public class Birou {
         for (Ghiseu ghiseu : lista_ghiseuri_din_birou) {
             String tipDocument = ghiseu.getTip_de_document_eliberat();
 
+            contorListaGhiseuri++;
+            if(lista_ghiseuri_din_birou.size() < contorListaGhiseuri)
+            {
+                contorListaGhiseuri = 0;
+                leaveOffice(client);
+                return false;
+            }
+
             if(!documente.contains(tipDocument))
                 continue;
 
@@ -70,10 +79,8 @@ public class Birou {
                 }
             }
         }
+        leaveOffice(client);
 
-        if (!toateDocumenteleObtinute) {
-            leaveOffice(client);
-        }
         return toateDocumenteleObtinute;
     }
 

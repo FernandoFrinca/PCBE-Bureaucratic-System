@@ -53,12 +53,12 @@ public class Ghiseu {
     private synchronized void pauzaGhiseu() {
         stareGhiseu = false;
         System.out.println("Ghiseul " + tip_de_document_eliberat.getTip() + " este în pauză.");
-
+        redeschideGhiseu();
         // Pornim un thread pentru redeschiderea ghișeului după pauză
         new Thread(() -> {
             try {
                 Thread.sleep(1000); // Pauză de 5 secunde
-                redeschideGhiseu();
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -60,6 +60,7 @@ public class Client implements Runnable {
 
             switch (documentNecesar) {
                 case "Adeverinta":
+                    documenteNecesare.add("Buletin");
                     documenteNecesare.add("Adeverinta");
                     break;
                 case "Buletin":
@@ -89,7 +90,7 @@ public class Client implements Runnable {
         try {
             cautaBirou();
             Thread.sleep(1000);
-            birou_asignat.leaveOffice(this);
+//            birou_asignat.leaveOffice(this);
             synchronized (lista_de_birouri) {
                 lista_de_birouri.notifyAll();
             }

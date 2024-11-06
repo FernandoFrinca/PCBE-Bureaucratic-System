@@ -41,9 +41,9 @@ public class Main {
         ArrayList<Ghiseu> listaGhiseuriBirou1 = new ArrayList<>();
         listaGhiseuriBirou1.add(ghiseuPasaport1);
         listaGhiseuriBirou1.add(ghiseuPasaport2);
-        listaGhiseuriBirou1.add(ghiseuBuletin1);
-        listaGhiseuriBirou1.add(ghiseuBuletin2);
-        listaGhiseuriBirou1.add(ghiseuAdeverinta1);
+//        listaGhiseuriBirou1.add(ghiseuBuletin1);
+//        listaGhiseuriBirou1.add(ghiseuBuletin2);
+//        listaGhiseuriBirou1.add(ghiseuAdeverinta1);
 
         ArrayList<Ghiseu> listaGhiseuriBirou2 = new ArrayList<>();
         listaGhiseuriBirou2.add(ghiseuPasaport3);
