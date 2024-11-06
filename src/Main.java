@@ -13,24 +13,51 @@ public class Main {
         //buletin -> adeverinta
         //adeverinta -> NIMIC
 
+        // Tipuri de documente
         Document buletin = new Buletin();
         Document pasaport = new Pasaport();
         Document adeverinta = new Adeverinta();
 
-        Ghiseu ghiseuBuletin = new Ghiseu(buletin);
-        Ghiseu ghiseuPasaport = new Ghiseu(pasaport);
-        Ghiseu ghiseuAdeverinta = new Ghiseu(adeverinta);
+        // Crearea a câte 5 ghișee pentru fiecare tip de document
+        Ghiseu ghiseuPasaport1 = new Ghiseu(pasaport);
+        Ghiseu ghiseuPasaport2 = new Ghiseu(pasaport);
+        Ghiseu ghiseuPasaport3 = new Ghiseu(pasaport);
+        Ghiseu ghiseuPasaport4 = new Ghiseu(pasaport);
+        Ghiseu ghiseuPasaport5 = new Ghiseu(pasaport);
 
+        Ghiseu ghiseuBuletin1 = new Ghiseu(buletin);
+        Ghiseu ghiseuBuletin2 = new Ghiseu(buletin);
+        Ghiseu ghiseuBuletin3 = new Ghiseu(buletin);
+        Ghiseu ghiseuBuletin4 = new Ghiseu(buletin);
+        Ghiseu ghiseuBuletin5 = new Ghiseu(buletin);
+
+        Ghiseu ghiseuAdeverinta1 = new Ghiseu(adeverinta);
+        Ghiseu ghiseuAdeverinta2 = new Ghiseu(adeverinta);
+        Ghiseu ghiseuAdeverinta3 = new Ghiseu(adeverinta);
+        Ghiseu ghiseuAdeverinta4 = new Ghiseu(adeverinta);
+        Ghiseu ghiseuAdeverinta5 = new Ghiseu(adeverinta);
+
+        // Alocarea ghișeelor în birouri
         ArrayList<Ghiseu> listaGhiseuriBirou1 = new ArrayList<>();
-        listaGhiseuriBirou1.add(ghiseuBuletin);
-        listaGhiseuriBirou1.add(ghiseuAdeverinta);
+        listaGhiseuriBirou1.add(ghiseuPasaport1);
+        listaGhiseuriBirou1.add(ghiseuPasaport2);
+        listaGhiseuriBirou1.add(ghiseuBuletin1);
+        listaGhiseuriBirou1.add(ghiseuBuletin2);
+        listaGhiseuriBirou1.add(ghiseuAdeverinta1);
 
         ArrayList<Ghiseu> listaGhiseuriBirou2 = new ArrayList<>();
-        listaGhiseuriBirou2.add(ghiseuBuletin);
-        listaGhiseuriBirou2.add(ghiseuAdeverinta);
+        listaGhiseuriBirou2.add(ghiseuPasaport3);
+        listaGhiseuriBirou2.add(ghiseuPasaport4);
+        listaGhiseuriBirou2.add(ghiseuBuletin3);
+        listaGhiseuriBirou2.add(ghiseuBuletin4);
+        listaGhiseuriBirou2.add(ghiseuAdeverinta2);
+        listaGhiseuriBirou2.add(ghiseuAdeverinta3);
 
         ArrayList<Ghiseu> listaGhiseuriBirou3 = new ArrayList<>();
-        listaGhiseuriBirou3.add(ghiseuPasaport);
+        listaGhiseuriBirou3.add(ghiseuPasaport5);
+        listaGhiseuriBirou3.add(ghiseuBuletin5);
+        listaGhiseuriBirou3.add(ghiseuAdeverinta4);
+        listaGhiseuriBirou3.add(ghiseuAdeverinta5);
 
         ArrayList<Birou> listaDeBirouri = new ArrayList<>();
         listaDeBirouri.add(new Birou("Birou 1", listaGhiseuriBirou1));

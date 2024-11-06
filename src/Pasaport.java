@@ -8,4 +8,8 @@ public class Pasaport extends Document {
         super("Pasaport");
 
     }
+
+    public String toString() {
+        return "Pasaport";
+    }
 }

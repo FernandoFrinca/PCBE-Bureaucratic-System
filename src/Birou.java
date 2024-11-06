@@ -41,17 +41,33 @@ public class Birou {
         for (Ghiseu ghiseu : lista_ghiseuri_din_birou) {
             String tipDocument = ghiseu.getTip_de_document_eliberat();
 
-            System.out.println("=  Clientul " + client + " a intrat in ghiseul pentru " + tipDocument);
+            if(!documente.contains(tipDocument))
+                continue;
 
-            if (documente.contains(tipDocument)) {
-                documente.remove(tipDocument);
-                client.setDocumenteNecesare(documente);
-                System.out.println("-  A fost scos documentul: " + tipDocument);
-                System.out.println("+  Documente ramase: " + documente);
-            }
+            System.out.println("=  Clientul " + client + " a intrat în ghișeul pentru " + tipDocument);
 
-            if (!documente.isEmpty()) {
-                toateDocumenteleObtinute = false;
+            synchronized (ghiseu) {
+                while (!ghiseu.getStareGhiseu()) {
+                    try {
+                        System.out.println("Clientul " + client + " așteaptă redeschiderea ghișeului pentru " + tipDocument);
+                        ghiseu.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                ghiseu.incrementeazaContor();
+
+                if (documente.contains(tipDocument) && ghiseu.getStareGhiseu()) {
+                    documente.remove(tipDocument);
+                    client.setDocumenteNecesare(documente);
+                    System.out.println("- "+ client +"-  A fost obținut documentul: " + tipDocument);
+                    System.out.println("+ "+ client +"+  Documente rămase: " + documente);
+                }
+
+                if (!documente.isEmpty()) {
+                    toateDocumenteleObtinute = false;
+                }
             }
         }
 
@@ -60,6 +76,9 @@ public class Birou {
         }
         return toateDocumenteleObtinute;
     }
+
+
+
 
     @Override
     public String toString() {
